@@ -44,20 +44,21 @@ void Gyro::Handler::ProcessMovement()
 
     double magnitude = m_Accelerometer.Magnitude();
 
-    m_GyroAcceleration.SetY(asin(m_Accelerometer.GetY() / magnitude) * 57.296);
-
     m_GyroAcceleration.SetX(asin(m_Accelerometer.GetX() / magnitude) * -57.296);
+    m_GyroAcceleration.SetY(asin(m_Accelerometer.GetY() / magnitude) * 57.296);
+    m_GyroAcceleration.SetZ(atan(magnitude / m_Accelerometer.GetZ()) * 57.296);
 
     if (m_GyroInitialised)
     {
-        m_RawRotation.SetY(m_RawRotation.GetY() * 0.9996 + m_GyroAcceleration.GetY() * 0.0004);
-
         m_RawRotation.SetX(m_RawRotation.GetX() * 0.9996 + m_GyroAcceleration.GetX() * 0.0004);
+        m_RawRotation.SetY(m_RawRotation.GetY() * 0.9996 + m_GyroAcceleration.GetY() * 0.0004);
+        m_RawRotation.SetZ(m_RawRotation.GetZ() * 0.9996 + m_GyroAcceleration.GetZ() * 0.0004);
     }
     else
     {
-        m_RawRotation.SetY(m_GyroAcceleration.GetY());
         m_RawRotation.SetX(m_GyroAcceleration.GetX());
+        m_RawRotation.SetY(m_GyroAcceleration.GetY());
+        m_RawRotation.SetZ(m_GyroAcceleration.GetZ());
         m_GyroInitialised = true;
     }
 
